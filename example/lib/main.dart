@@ -2,11 +2,21 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:barcode_scan/platform_barcode_scanner_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-  runApp(_MyApp());
+  runApp(App());
+}
+
+class App extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: _MyApp(),
+    );
+  }
 }
 
 class _MyApp extends StatefulWidget {
@@ -46,6 +56,19 @@ class _MyAppState extends State<_MyApp> {
   @override
   Widget build(BuildContext context) {
     var contentList = <Widget>[
+      GestureDetector(
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return Page1();
+          }));
+        },
+        child: Container(
+          padding: EdgeInsets.only(top: 30),
+          alignment: Alignment.center,
+          height: 60,
+          child: Text("Custom Scanner View"),
+        ),
+      ),
       if (scanResult != null)
         Card(
           child: Column(
@@ -277,5 +300,72 @@ class _MyAppState extends State<_MyApp> {
         scanResult = result;
       });
     }
+  }
+}
+
+class Page1 extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _Page1State();
+  }
+}
+
+class _Page1State extends State<Page1> {
+  @override
+  void initState() {
+    super.initState();
+    BarcodeScanner.scannerViewChannel.setMethodCallHandler(methodCallHandler);
+  }
+
+  Future<dynamic> methodCallHandler(MethodCall methodCall) async {
+    switch (methodCall.method) {
+      case 'didScanBarcodeAction':
+        print(methodCall.arguments); // prints the argument - "someValue"
+        return null; // could return a value here
+      default:
+        throw PlatformException(code: 'notimpl', message: 'not implemented');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+          appBar: AppBar(
+            title: Text('Barcode Scanner'),
+            leading: GestureDetector(
+              onTap: () async {
+                await BarcodeScanner.stopScanning();
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                alignment: Alignment.center,
+                child: Text("返回"),
+                height: 40,
+              ),
+            ),
+          ),
+          body: Column(
+            children: <Widget>[
+              Container(
+                height: 200,
+                child: PlatformBarcodeScannerWidget(
+                  height: 200,
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: 30,
+                  itemBuilder: (_, index) {
+                    return ListTile(
+                      title: Text("标题$index"),
+                    );
+                  },
+                ),
+              ),
+            ],
+          )),
+    );
   }
 }
