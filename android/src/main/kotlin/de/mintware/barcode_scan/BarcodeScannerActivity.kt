@@ -2,7 +2,9 @@ package de.mintware.barcode_scan
 
 import android.app.Activity
 import android.content.Intent
+import android.hardware.camera2.CameraManager
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.google.zxing.BarcodeFormat
