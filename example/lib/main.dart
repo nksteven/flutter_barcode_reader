@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:barcode_scan/platform_barcode_scanner_widget.dart';
+import 'package:barcode_scan_example/First.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -47,10 +48,10 @@ class _MyAppState extends State<_MyApp> {
   initState() {
     super.initState();
 
-    Future.delayed(Duration.zero, () async {
-      _numberOfCameras = await BarcodeScanner.numberOfCameras;
-      setState(() {});
-    });
+//    Future.delayed(Duration.zero, () async {
+//      _numberOfCameras = await BarcodeScanner.numberOfCameras;
+//      setState(() {});
+//    });
   }
 
   @override
@@ -244,22 +245,23 @@ class _MyAppState extends State<_MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Barcode Scanner Example'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.camera),
-              tooltip: "Scan",
-              onPressed: scan,
-            )
-          ],
-        ),
-        body: ListView(
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          children: contentList,
-        ),
-      ),
+          appBar: AppBar(
+            title: Text('Barcode Scanner Example'),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.camera),
+                tooltip: "Scan",
+                onPressed: scan,
+              )
+            ],
+          ),
+          body: FirstPage()
+//        ListView(
+//          scrollDirection: Axis.vertical,
+//          shrinkWrap: true,
+//          children: contentList,
+//        ),
+          ),
     );
   }
 

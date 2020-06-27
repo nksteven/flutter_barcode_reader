@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
@@ -11,10 +13,17 @@ class PlatformBarcodeScannerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UiKitView(
-      viewType: "com.flutter_to_barcode_scanner_view",
-      creationParamsCodec: const StandardMessageCodec(),
-      creationParams: height,
-    );
+    if (Platform.isIOS) {
+      return UiKitView(
+        viewType: "com.flutter_to_barcode_scanner_view",
+        creationParamsCodec: const StandardMessageCodec(),
+        creationParams: height,
+      );
+    } else {
+      return AndroidView(
+          viewType: "barcode_android_view",
+          creationParamsCodec: const StandardMessageCodec(),
+          creationParams: height);
+    }
   }
 }
