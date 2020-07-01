@@ -98,4 +98,10 @@ class BarcodeScanner {
   static void stopScanning() {
     scannerViewChannel.invokeMethod('stopScanning');
   }
+
+  static Future<bool> requestCameraPermission() async {
+    var permissionsRequested =
+        await _channel.invokeMethod('requestCameraPermission');
+    return permissionsRequested;
+  }
 }

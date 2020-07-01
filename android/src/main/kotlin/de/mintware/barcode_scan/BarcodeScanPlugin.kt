@@ -8,7 +8,7 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.PluginRegistry.Registrar
 
 /** BarcodeScanPlugin */
-class BarcodeScanPlugin : FlutterPlugin {
+class BarcodeScanPlugin:FlutterPlugin{
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -33,6 +33,7 @@ class BarcodeScanPlugin : FlutterPlugin {
             registrar.platformViewRegistry().registerViewFactory("barcode_android_view",BarcodeViewFactory(registrar.messenger()))
         }
     }
+
 
    
 }
