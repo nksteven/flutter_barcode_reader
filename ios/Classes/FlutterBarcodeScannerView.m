@@ -57,6 +57,8 @@ CGFloat lineImageViewHeight = 2;
                     }
                 } error:nil];
                 [strongSelf addAnimation];
+            }else {
+            [strongSelf.delegate cameraDenied:YES];
             }
         }];
     }
