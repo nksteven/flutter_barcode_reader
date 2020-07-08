@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FlutterBarcodeScannerViewDelegate <NSObject>
 
 - (void)didScanBarcodeWithResult:(NSString*) result;
+- (void)cameraDenied:(bool) permission;
 
 @end
 

@@ -52,11 +52,16 @@ CGFloat lineImageViewHeight = 2;
                         NSString * value = @"";
                         if (object != nil) {
                             value = object.stringValue;
+                            if (object.type == AVMetadataObjectTypeEAN13Code && [value hasPrefix:@"0"]) {
+                                value = [value substringFromIndex:1];
+                            }
                         }
                         [strongSelf.delegate didScanBarcodeWithResult:value];
                     }
                 } error:nil];
                 [strongSelf addAnimation];
+            }else {
+            [strongSelf.delegate cameraDenied:YES];
             }
         }];
     }

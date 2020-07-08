@@ -40,6 +40,12 @@
     }
 }
 
+- (void)cameraDenied:(BOOL)result {
+    if (_channel) {
+        [_channel invokeMethod:@"cameraDenied" arguments:[NSNumber numberWithBool:result]];
+    }
+}
+
 + (void)registerWithRegistrar:(nonnull NSObject<FlutterPluginRegistrar> *)registrar {
     id viewFactory = [[FlutterBarcodeScannerViewFactory alloc]initWithRegistrar:registrar];
     [registrar registerViewFactory:viewFactory withId:@"com.flutter_to_barcode_scanner_view"];
