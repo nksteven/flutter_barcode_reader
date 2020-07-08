@@ -1,4 +1,4 @@
-package de.mintware.barcode_scan;
+package android.src.main.kotlin.de.mintware.barcode_scan;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -132,7 +132,6 @@ public class MyCameraPreview extends SurfaceView implements SurfaceHolder.Callba
 
     public void setupCameraParameters() {
         Camera.Size optimalSize = getOptimalPreviewSize();
-        Log.d(TAG,"optimalSize.width="+optimalSize.width+"   height="+optimalSize.height);
         Camera.Parameters parameters = mCameraWrapper.mCamera.getParameters();
         parameters.setPreviewSize(optimalSize.width, optimalSize.height);
         mCameraWrapper.mCamera.setParameters(parameters);
@@ -141,12 +140,8 @@ public class MyCameraPreview extends SurfaceView implements SurfaceHolder.Callba
 
     private void adjustViewSize(Camera.Size cameraSize) {
         Point previewSize = convertSizeToLandscapeOrientation(new Point(getWidth(), getHeight()));
-        Log.d(TAG,"adjustViewSize   getWidth="+getWidth()+"   getHeight="+getHeight());
         float cameraRatio = ((float) cameraSize.width) / cameraSize.height;
-        Log.d(TAG,"adjustViewSize   cameraSize.width="+cameraSize.width+"   cameraSize.height="+cameraSize.height);
         float screenRatio = ((float) previewSize.x) / previewSize.y;
-        Log.d(TAG,"adjustViewSize   previewSize.x="+previewSize.x+"   previewSize.y="+previewSize.y);
-        Log.d(TAG,"cameraRatio="+cameraRatio+"  screenRatio="+screenRatio);
         if (screenRatio > cameraRatio) {
             setViewSize((int) ((previewSize.y * cameraRatio)), (int) (previewSize.y));
         } else {
@@ -190,7 +185,6 @@ public class MyCameraPreview extends SurfaceView implements SurfaceHolder.Callba
             tmpWidth = Math.round(tmpWidth * compensation);
             tmpHeight = Math.round(tmpHeight * compensation);
         }
-        Log.d(TAG,"setViewSize   tmpWidth="+tmpWidth+"   tmpHeight="+tmpHeight);
         layoutParams.width = tmpWidth;
         layoutParams.height = tmpHeight;
         setLayoutParams(layoutParams);

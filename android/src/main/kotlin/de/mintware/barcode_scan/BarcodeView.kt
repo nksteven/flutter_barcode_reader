@@ -49,7 +49,6 @@ class BarcodeView : PlatformView , MyScannerView.ResultHandler , MethodChannel.M
     constructor(context: Context, message: BinaryMessenger, args: Double){
         mContext=context
         BarcodeView.Companion.scanHeight=DisplayUtil.dip2px(context,args)
-        Log.d("args","args==$args")
         config = Protos.Configuration.newBuilder()
                 .putAllStrings(mapOf(
                         "cancel" to "Cancel",
@@ -66,7 +65,7 @@ class BarcodeView : PlatformView , MyScannerView.ResultHandler , MethodChannel.M
         setupScannerView()
         var handler:android.os.Handler=android.os.Handler(Looper.getMainLooper())
         handler.postDelayed(Runnable { startScanner() },1000)
-        channelHandler=MethodChannel(message,"plugins.flutter.io/barcode_view")
+        channelHandler=MethodChannel(message,"com.flutter_to_barcode_scanner_view_channel")
         channelHandler.setMethodCallHandler(this)
 //        startScanner();
     }
@@ -116,14 +115,13 @@ class BarcodeView : PlatformView , MyScannerView.ResultHandler , MethodChannel.M
     }
 
     override fun handleResult(result: Result?) {
-        Log.v("handleResult","result=${result}")
         var response:String=""
         if (result == null) {
             response=""
         } else {
             response=result.text
         }
-        channelHandler.invokeMethod("onScanCallBack",response);
+        channelHandler.invokeMethod("didScanBarcodeAction",response);
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {

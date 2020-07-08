@@ -1,4 +1,4 @@
-package de.mintware.barcode_scan;
+package android.src.main.kotlin.de.mintware.barcode_scan;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -261,7 +261,6 @@ public abstract class MyBarcodeScannerView  extends BarcodeScannerView {
             }
             mFramingRectInPreview = rect;
         }
-        Log.d("handler","mFramingRectInPreview="+mFramingRectInPreview);
         return mFramingRectInPreview;
     }
 

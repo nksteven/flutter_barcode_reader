@@ -1,4 +1,4 @@
-package de.mintware.barcode_scan;
+package android.src.main.kotlin.de.mintware.barcode_scan;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -39,7 +39,7 @@ public class MyScannerView extends MyBarcodeScannerView {
     private MultiFormatReader mMultiFormatReader;
     public static final List<BarcodeFormat> ALL_FORMATS = new ArrayList<>();
     private List<BarcodeFormat> mFormats;
-    private MyScannerView.ResultHandler mResultHandler;
+    private ResultHandler mResultHandler;
 
     static {
         ALL_FORMATS.add(BarcodeFormat.AZTEC);
@@ -77,7 +77,7 @@ public class MyScannerView extends MyBarcodeScannerView {
         initMultiFormatReader();
     }
 
-    public void setResultHandler(MyScannerView.ResultHandler resultHandler) {
+    public void setResultHandler(ResultHandler resultHandler) {
         mResultHandler = resultHandler;
     }
 
@@ -106,24 +106,19 @@ public class MyScannerView extends MyBarcodeScannerView {
             Camera.Size size = parameters.getPreviewSize();
             int width = size.width;
             int height = size.height;
-            Log.d("handler","onPreviewFrame   width="+width+"   height="+height);
             if (DisplayUtils.getScreenOrientation(getContext()) == Configuration.ORIENTATION_PORTRAIT) {
                 int rotationCount = getRotationCount();
-                Log.d("handler","rotationCount = "+rotationCount);
                 if (rotationCount == 1 || rotationCount == 3) {
                     int tmp = width;
                     width = height;
                     height = tmp;
                 }
                 data = getRotatedData(data, camera);
-                Log.d("handler","data = "+data);
             }
 
             Result rawResult = null;
             PlanarYUVLuminanceSource source = buildLuminanceSource(data, width, height);
-            Log.d("handler","handler3");
             if (source != null) {
-                Log.d("handler","handler4");
                 BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
                 try {
                     rawResult = mMultiFormatReader.decodeWithState(bitmap);
@@ -151,9 +146,7 @@ public class MyScannerView extends MyBarcodeScannerView {
             }
 
             final Result finalRawResult = rawResult;
-            Log.d("handler","handler5");
             if (finalRawResult != null) {
-                Log.d("handler","handler6");
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     @Override
@@ -161,7 +154,6 @@ public class MyScannerView extends MyBarcodeScannerView {
 //                        ZXingScannerView.ResultHandler tmpResultHandler = mResultHandler;
 //                        mResultHandler = null;
 //                        stopCameraPreview();
-                        Log.d("handler","handler");
                         if (mResultHandler != null) {
                             mResultHandler.handleResult(finalRawResult);
                         }
@@ -172,7 +164,7 @@ public class MyScannerView extends MyBarcodeScannerView {
                     public void run() {
                         resumeCameraPreview(mResultHandler);
                     }
-                },1000);
+                },2000);
             } else {
                 camera.setOneShotPreviewCallback(this);
             }
@@ -182,7 +174,7 @@ public class MyScannerView extends MyBarcodeScannerView {
         }
     }
 
-    public void resumeCameraPreview(MyScannerView.ResultHandler resultHandler) {
+    public void resumeCameraPreview(ResultHandler resultHandler) {
         mResultHandler = resultHandler;
         super.resumeCameraPreview();
     }

@@ -1,4 +1,4 @@
-package de.mintware.barcode_scan;
+package android.src.main.kotlin.de.mintware.barcode_scan;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -220,7 +220,6 @@ public class MyViewFinderView  extends View implements IViewFinder {
                 framingRect.right + POINT_SIZE,
                 framingRect.bottom + POINT_SIZE);
 
-        Log.d("handler","framingRect="+framingRect+"   POINT_SIZE="+POINT_SIZE);
 
     }
 
@@ -253,7 +252,6 @@ public class MyViewFinderView  extends View implements IViewFinder {
             }
         }
 
-        Log.d("updateFramingRect","getwidth=="+getWidth()+"   getheight="+getHeight());
 
         if(width > getWidth()) {
             width = getWidth() - MIN_DIMENSION_DIFF;
@@ -265,10 +263,8 @@ public class MyViewFinderView  extends View implements IViewFinder {
 
         int leftOffset = (viewResolution.x - width) / 2;
         int topOffset = (viewResolution.y - height) / 2;
-        Log.d("updateFramingRect","leftOffset="+leftOffset+"  topOffset="+topOffset+"  width="+width+"  height="+height);
 //        mFramingRect = new Rect(leftOffset + mViewFinderOffset, topOffset + mViewFinderOffset, leftOffset + width - mViewFinderOffset, topOffset + height - mViewFinderOffset);
         mFramingRect = new Rect(0, 0, viewResolution.x, BarcodeView.Companion.getScanHeight());
-        Log.d("updateFramingRect","mFramingRect="+mFramingRect+"  mSquareViewFinder="+mSquareViewFinder);
     }
 
 }

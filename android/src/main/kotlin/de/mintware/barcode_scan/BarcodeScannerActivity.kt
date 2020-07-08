@@ -120,7 +120,6 @@ class BarcodeScannerActivity : Activity(), ZXingScannerView.ResultHandler {
     // endregion
 
     override fun handleResult(result: Result?) {
-        Log.v("actihandleResult","result=$result")
         val intent = Intent()
 
         val builder = Protos.ScanResult.newBuilder()
