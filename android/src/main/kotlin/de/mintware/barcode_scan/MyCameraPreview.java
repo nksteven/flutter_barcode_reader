@@ -1,4 +1,4 @@
-package android.src.main.kotlin.de.mintware.barcode_scan;
+package de.mintware.barcode_scan;
 
 import android.content.Context;
 import android.content.res.Configuration;
