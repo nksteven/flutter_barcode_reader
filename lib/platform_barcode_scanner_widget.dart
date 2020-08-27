@@ -31,6 +31,8 @@ class PlatformBarcodeScannerWidget extends StatelessWidget {
 class ScanParam{
   double height;
   int scanType;
+  static const int SCAN_BARCODE=1;
+  static const int SCAN_QRCODE=2;
 
   ScanParam(this.height, this.scanType);
 

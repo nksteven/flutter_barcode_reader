@@ -45,7 +45,7 @@ class _FirstPageState extends State<FirstPage> {
           Container(
             key: ValueKey("barcode_android_view"),
             child: PlatformBarcodeScannerWidget(
-              param: ScanParam(200,2),
+              param: ScanParam(200,ScanParam.SCAN_BARCODE),
             ),
           ),
           Container(
