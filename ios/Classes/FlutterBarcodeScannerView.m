@@ -16,6 +16,7 @@ CGFloat lineImageViewHeight = 2;
 @interface FlutterBarcodeScannerView() {
     UIView* _view;
     CGFloat _viewHeight;
+    NSString* _scanType;
 }
 
 @property (strong, nonatomic) MTBBarcodeScanner* scanner;
@@ -28,7 +29,15 @@ CGFloat lineImageViewHeight = 2;
     if ([super init]) {
         _viewHeight = 200;
         if (args != nil && ![args isKindOfClass:[NSNull class]]) {
-            _viewHeight = ((NSNumber*)args).floatValue;
+            NSDictionary* params = args;
+            NSString* height = [params objectForKey:@"height"];
+            NSString* scanType = [params objectForKey:@"scanType"];
+            if (height != nil && ![height isKindOfClass:[NSNull class]]) {
+                _viewHeight = height.floatValue;
+            }
+            if (scanType != nil && ![scanType isKindOfClass:[NSNull class]]) {
+                _scanType = scanType;
+            }
         }
         CGFloat width = [UIScreen mainScreen].bounds.size.width;
         _view = [[UIView alloc]initWithFrame:CGRectMake(frame.origin.x, frame.origin.y, width, _viewHeight)];
@@ -41,7 +50,17 @@ CGFloat lineImageViewHeight = 2;
         lineImageView.backgroundColor = [UIColor clearColor];
         [_view addSubview: lineImageView];
 
-        _scanner = [[MTBBarcodeScanner alloc]initWithPreviewView:_view];
+        NSMutableArray<NSString *> *metaDataObjectTypes = [NSMutableArray arrayWithArray:[self defaultMetaDataObjectTypes]];
+        if (_scanType != nil && ![_scanType isKindOfClass:[NSNull class]]) {
+            if ([_scanType isEqualToString:@"1"]) {
+                //条形码
+                [metaDataObjectTypes removeObjectAtIndex:0];
+            } else {
+                //二维码
+                metaDataObjectTypes = [NSMutableArray arrayWithObject:metaDataObjectTypes.firstObject];
+            }
+        }
+        _scanner = [[MTBBarcodeScanner alloc]initWithMetadataObjectTypes:metaDataObjectTypes previewView:_view];
         __weak typeof(self) weakSelf = self;
         [MTBBarcodeScanner requestCameraPermissionWithSuccess:^(BOOL success) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -66,6 +85,28 @@ CGFloat lineImageViewHeight = 2;
         }];
     }
     return self;
+}
+
+- (NSArray<NSString *> *)defaultMetaDataObjectTypes {
+    NSMutableArray *types = [@[AVMetadataObjectTypeQRCode,
+                               AVMetadataObjectTypeUPCECode,
+                               AVMetadataObjectTypeCode39Code,
+                               AVMetadataObjectTypeCode39Mod43Code,
+                               AVMetadataObjectTypeEAN13Code,
+                               AVMetadataObjectTypeEAN8Code,
+                               AVMetadataObjectTypeCode93Code,
+                               AVMetadataObjectTypeCode128Code,
+                               AVMetadataObjectTypePDF417Code,
+                               AVMetadataObjectTypeAztecCode] mutableCopy];
+
+    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_7_1) {
+        [types addObjectsFromArray:@[AVMetadataObjectTypeInterleaved2of5Code,
+                                     AVMetadataObjectTypeITF14Code,
+                                     AVMetadataObjectTypeDataMatrixCode
+                                     ]];
+    }
+
+    return [types copy];
 }
 
 - (void) addAnimation {
