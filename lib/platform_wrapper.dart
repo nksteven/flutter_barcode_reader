@@ -104,4 +104,9 @@ class BarcodeScanner {
         await _channel.invokeMethod('requestCameraPermission');
     return permissionsRequested;
   }
+
+  static void resumeCamera(){
+    scannerViewChannel.invokeMethod('resumeCamera');
+  }
+
 }

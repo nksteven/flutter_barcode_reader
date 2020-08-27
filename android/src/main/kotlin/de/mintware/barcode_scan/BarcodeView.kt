@@ -139,7 +139,14 @@ class BarcodeView : PlatformView , MyScannerView.ResultHandler , MethodChannel.M
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if(call.method=="resumeCamera"){
+            resumeCamera()
+            result.success(true)
+        }
+    }
+
+    fun resumeCamera(){
+        scannerView?.resumeCameraPreview()
     }
     
     override fun dispose() {
