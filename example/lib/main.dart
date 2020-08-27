@@ -353,7 +353,7 @@ class _Page1State extends State<Page1> {
               Container(
                 height: 200,
                 child: PlatformBarcodeScannerWidget(
-                  height: 200,
+                  param: ScanParam(200,1),
                 ),
               ),
               Expanded(

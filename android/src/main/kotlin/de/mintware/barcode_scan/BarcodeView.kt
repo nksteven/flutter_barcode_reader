@@ -29,6 +29,7 @@ class BarcodeView : PlatformView , MyScannerView.ResultHandler , MethodChannel.M
         const val EXTRA_RESULT = "scan_result"
         const val EXTRA_ERROR_CODE = "error_code"
         var scanHeight: Int?=null
+        var scanType: Int=1
 
         private val formatMap: Map<Protos.BarcodeFormat, BarcodeFormat> = mapOf(
                 Protos.BarcodeFormat.aztec to BarcodeFormat.AZTEC,
@@ -46,9 +47,9 @@ class BarcodeView : PlatformView , MyScannerView.ResultHandler , MethodChannel.M
 
     }
 
-    constructor(context: Context, message: BinaryMessenger, args: Double){
+    constructor(context: Context, message: BinaryMessenger, args: Map<String,Any>){
         mContext=context
-        BarcodeView.Companion.scanHeight=DisplayUtil.dip2px(context,args)
+        getDataByArgs(args)
         config = Protos.Configuration.newBuilder()
                 .putAllStrings(mapOf(
                         "cancel" to "Cancel",
@@ -68,6 +69,18 @@ class BarcodeView : PlatformView , MyScannerView.ResultHandler , MethodChannel.M
         channelHandler=MethodChannel(message,"com.flutter_to_barcode_scanner_view_channel")
         channelHandler.setMethodCallHandler(this)
 //        startScanner();
+    }
+
+    private fun getDataByArgs(args: Map<String, Any>) {
+        if(args.containsKey("height")){
+            var heightArgs=args["height"].toString().toDouble()
+            scanHeight=DisplayUtil.dip2px(mContext,heightArgs)
+        }
+        if(args.containsKey("scanType")){
+            var type=args["scanType"].toString().toInt()
+            scanType=type
+        }
+
     }
 
     private fun setupScannerView() {
@@ -121,6 +134,7 @@ class BarcodeView : PlatformView , MyScannerView.ResultHandler , MethodChannel.M
         } else {
             response=result.text
         }
+        Log.d("response","response===$response");
         channelHandler.invokeMethod("didScanBarcodeAction",response);
     }
 

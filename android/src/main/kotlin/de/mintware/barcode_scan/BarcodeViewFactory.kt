@@ -11,7 +11,7 @@ class BarcodeViewFactory(var messenger: BinaryMessenger): PlatformViewFactory(St
 
     override fun create(context: Context, viewId: Int, args: Any): PlatformView {
         var params=args?.let {
-            args as Double
+            args as  Map<String,Any>
         }
         return  BarcodeView(context,messenger,params)
     }

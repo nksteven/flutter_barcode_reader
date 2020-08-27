@@ -26,7 +26,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import me.dm7.barcodescanner.core.BarcodeScannerView;
 import me.dm7.barcodescanner.core.DisplayUtils;
 
 public class MyScannerView extends MyBarcodeScannerView {
@@ -37,28 +36,30 @@ public class MyScannerView extends MyBarcodeScannerView {
     }
 
     private MultiFormatReader mMultiFormatReader;
-    public static final List<BarcodeFormat> ALL_FORMATS = new ArrayList<>();
+    public static final List<BarcodeFormat> BARCODE_FORMAT_ARRAY_LIST = new ArrayList<>();
+    public static final List<BarcodeFormat> QRCODE_FORMAT_ARRAY_LIST = new ArrayList<>();
     private List<BarcodeFormat> mFormats;
     private ResultHandler mResultHandler;
 
     static {
-        ALL_FORMATS.add(BarcodeFormat.AZTEC);
-        ALL_FORMATS.add(BarcodeFormat.CODABAR);
-        ALL_FORMATS.add(BarcodeFormat.CODE_39);
-        ALL_FORMATS.add(BarcodeFormat.CODE_93);
-        ALL_FORMATS.add(BarcodeFormat.CODE_128);
-        ALL_FORMATS.add(BarcodeFormat.DATA_MATRIX);
-        ALL_FORMATS.add(BarcodeFormat.EAN_8);
-        ALL_FORMATS.add(BarcodeFormat.EAN_13);
-        ALL_FORMATS.add(BarcodeFormat.ITF);
-        ALL_FORMATS.add(BarcodeFormat.MAXICODE);
-        ALL_FORMATS.add(BarcodeFormat.PDF_417);
-        ALL_FORMATS.add(BarcodeFormat.QR_CODE);
-        ALL_FORMATS.add(BarcodeFormat.RSS_14);
-        ALL_FORMATS.add(BarcodeFormat.RSS_EXPANDED);
-        ALL_FORMATS.add(BarcodeFormat.UPC_A);
-        ALL_FORMATS.add(BarcodeFormat.UPC_E);
-        ALL_FORMATS.add(BarcodeFormat.UPC_EAN_EXTENSION);
+        BARCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.AZTEC);
+        BARCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.CODABAR);
+        BARCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.CODE_39);
+        BARCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.CODE_93);
+        BARCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.CODE_128);
+        BARCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.DATA_MATRIX);
+        BARCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.EAN_8);
+        BARCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.EAN_13);
+        BARCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.ITF);
+        BARCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.MAXICODE);
+        BARCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.PDF_417);
+        BARCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.RSS_14);
+        BARCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.RSS_EXPANDED);
+        BARCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.UPC_A);
+        BARCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.UPC_E);
+        BARCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.UPC_EAN_EXTENSION);
+
+        QRCODE_FORMAT_ARRAY_LIST.add(BarcodeFormat.QR_CODE);
     }
 
     public MyScannerView(Context context) {
@@ -82,14 +83,20 @@ public class MyScannerView extends MyBarcodeScannerView {
     }
 
     public Collection<BarcodeFormat> getFormats() {
-        if(mFormats == null) {
-            return ALL_FORMATS;
+        if (mFormats == null) {
+            if (BarcodeView.Companion.getScanType() == 1) {
+                Log.d("response","scantype== 1");
+                return BARCODE_FORMAT_ARRAY_LIST;
+            } else {
+                Log.d("response","scantype== 2");
+                return QRCODE_FORMAT_ARRAY_LIST;
+            }
         }
         return mFormats;
     }
 
     private void initMultiFormatReader() {
-        Map<DecodeHintType,Object> hints = new EnumMap<>(DecodeHintType.class);
+        Map<DecodeHintType, Object> hints = new EnumMap<>(DecodeHintType.class);
         hints.put(DecodeHintType.POSSIBLE_FORMATS, getFormats());
         mMultiFormatReader = new MultiFormatReader();
         mMultiFormatReader.setHints(hints);
@@ -97,7 +104,7 @@ public class MyScannerView extends MyBarcodeScannerView {
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
-        if(mResultHandler == null) {
+        if (mResultHandler == null) {
             return;
         }
 
@@ -164,11 +171,11 @@ public class MyScannerView extends MyBarcodeScannerView {
                     public void run() {
                         resumeCameraPreview(mResultHandler);
                     }
-                },2000);
+                }, 2000);
             } else {
                 camera.setOneShotPreviewCallback(this);
             }
-        } catch(RuntimeException e) {
+        } catch (RuntimeException e) {
             // TODO: Terrible hack. It is possible that this method is invoked after camera is released.
             Log.e(TAG, e.toString(), e);
         }
@@ -192,7 +199,7 @@ public class MyScannerView extends MyBarcodeScannerView {
 //                    rect.width(), rect.height(), false);
             source = new PlanarYUVLuminanceSource(data, width, height, 0, 0,
                     width, BarcodeView.Companion.getScanHeight(), false);
-        } catch(Exception e) {
+        } catch (Exception e) {
         }
 
         return source;
