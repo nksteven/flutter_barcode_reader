@@ -106,7 +106,9 @@ class BarcodeScanner {
   }
 
   static void resumeCamera(){
-    scannerViewChannel.invokeMethod('resumeCamera');
+    if(Platform.isAndroid){
+      scannerViewChannel.invokeMethod('resumeCamera');
+    }
   }
 
 }
