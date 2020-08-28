@@ -24,6 +24,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) id<FlutterBarcodeScannerViewDelegate> delegate;
 
 - (void) stopScanning;
+- (void) startScanning;
+
+- (void) pauseScanning;
+- (void) resumeScanning;
 
 @end
 
