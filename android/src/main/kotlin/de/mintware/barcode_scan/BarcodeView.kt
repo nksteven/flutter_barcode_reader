@@ -140,15 +140,16 @@ class BarcodeView : PlatformView , MyScannerView.ResultHandler , MethodChannel.M
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         if(call.method=="resumeCamera"){
-            resumeCamera()
+            scannerView?.resumeCameraPreview()
             result.success(true)
+        }else if(call.method=="pauseCamera"){
+            scannerView?.stopCameraPreview()
+            result.success(true)
+        }else{
+            result.notImplemented()
         }
     }
 
-    fun resumeCamera(){
-        scannerView?.resumeCameraPreview()
-    }
-    
     override fun dispose() {
         scannerView?.stopCamera()
     }
