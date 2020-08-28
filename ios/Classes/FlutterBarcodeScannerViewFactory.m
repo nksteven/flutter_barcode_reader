@@ -30,6 +30,12 @@
     if ([@"stopScanning" isEqualToString:call.method]) {
         [_barcodeScannerView stopScanning];
         result(@(true));
+    } else if ([@"pauseCamera" isEqualToString:call.method]) {
+        [_barcodeScannerView pauseScanning];
+        result(@(true));
+    } else if ([@"resumeCamera" isEqualToString:call.method]) {
+        [_barcodeScannerView pauseScanning];
+        result(@(true));
     }
 }
 
