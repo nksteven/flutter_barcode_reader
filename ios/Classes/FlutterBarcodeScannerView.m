@@ -61,28 +61,7 @@ CGFloat lineImageViewHeight = 2;
             }
         }
         _scanner = [[MTBBarcodeScanner alloc]initWithMetadataObjectTypes:metaDataObjectTypes previewView:_view];
-        __weak typeof(self) weakSelf = self;
-        [MTBBarcodeScanner requestCameraPermissionWithSuccess:^(BOOL success) {
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (success) {
-                [strongSelf.scanner startScanningWithResultBlock:^(NSArray<AVMetadataMachineReadableCodeObject *> *codes) {
-                    if (strongSelf.delegate) {
-                        AVMetadataMachineReadableCodeObject* object = [codes firstObject];
-                        NSString * value = @"";
-                        if (object != nil) {
-                            value = object.stringValue;
-                            if (object.type == AVMetadataObjectTypeEAN13Code && [value hasPrefix:@"0"]) {
-                                value = [value substringFromIndex:1];
-                            }
-                        }
-                        [strongSelf.delegate didScanBarcodeWithResult:value];
-                    }
-                } error:nil];
-                [strongSelf addAnimation];
-            }else {
-            [strongSelf.delegate cameraDenied:YES];
-            }
-        }];
+        [self startScanning];
     }
     return self;
 }
@@ -122,9 +101,49 @@ CGFloat lineImageViewHeight = 2;
     lineView.hidden = YES;
 }
 
-- (void) stopScanning {
+- (void) pauseScanning {
+    [_scanner freezeCapture];
     [self removeAnimation];
-    [self.scanner stopScanning];
+}
+
+- (void) resumeScanning {
+    [_scanner unfreezeCapture];
+    [self addAnimation];
+}
+
+- (void) stopScanning {
+    if (self.scanner.isScanning) {
+        [self removeAnimation];
+        [self.scanner stopScanning];
+    }
+}
+
+- (void) startScanning {
+    if (self.scanner.isScanning) {
+        return;
+    }
+    __weak typeof(self) weakSelf = self;
+    [MTBBarcodeScanner requestCameraPermissionWithSuccess:^(BOOL success) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (success) {
+            [strongSelf.scanner startScanningWithResultBlock:^(NSArray<AVMetadataMachineReadableCodeObject *> *codes) {
+                if (strongSelf.delegate) {
+                    AVMetadataMachineReadableCodeObject* object = [codes firstObject];
+                    NSString * value = @"";
+                    if (object != nil) {
+                        value = object.stringValue;
+                        if (object.type == AVMetadataObjectTypeEAN13Code && [value hasPrefix:@"0"]) {
+                            value = [value substringFromIndex:1];
+                        }
+                    }
+                    [strongSelf.delegate didScanBarcodeWithResult:value];
+                }
+            } error:nil];
+            [strongSelf addAnimation];
+        } else {
+            [strongSelf.delegate cameraDenied:YES];
+        }
+    }];
 }
 
 + (CABasicAnimation *)moveYTime:(float)time fromY:(NSNumber *)fromY toY:(NSNumber *)toY rep:(int)rep {
