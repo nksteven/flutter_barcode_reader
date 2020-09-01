@@ -114,8 +114,8 @@ CGFloat lineImageViewHeight = 2;
 - (void) stopScanning {
     if (self.scanner.isScanning) {
         [self removeAnimation];
-        [self.scanner stopScanning];
     }
+    [self.scanner stopScanning];
 }
 
 - (void) startScanning {
@@ -163,7 +163,7 @@ CGFloat lineImageViewHeight = 2;
 }
 
 - (void)dealloc {
-    if (_scanner && [_scanner isScanning]) {
+    if (_scanner) {
         [_scanner stopScanning];
     }
     _scanner = nil;

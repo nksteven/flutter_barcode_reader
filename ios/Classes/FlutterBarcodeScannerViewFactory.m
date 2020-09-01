@@ -10,7 +10,7 @@
 
 @interface FlutterBarcodeScannerViewFactory() <FlutterPlatformViewFactory, FlutterBarcodeScannerViewDelegate>
 
-@property (nonatomic, strong) FlutterBarcodeScannerView* barcodeScannerView;
+@property (nonatomic, weak) FlutterBarcodeScannerView* barcodeScannerView;
 @property (nonatomic, strong) FlutterMethodChannel* channel;
 
 @end
