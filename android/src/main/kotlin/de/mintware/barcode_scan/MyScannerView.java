@@ -160,18 +160,18 @@ public class MyScannerView extends MyBarcodeScannerView {
                     public void run() {
 //                        ZXingScannerView.ResultHandler tmpResultHandler = mResultHandler;
 //                        mResultHandler = null;
-//                        stopCameraPreview();
+                        stopCameraPreview();
                         if (mResultHandler != null) {
                             mResultHandler.handleResult(finalRawResult);
                         }
                     }
                 });
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        resumeCameraPreview(mResultHandler);
-                    }
-                }, 2000);
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        resumeCameraPreview(mResultHandler);
+//                    }
+//                }, 1500);
             } else {
                 camera.setOneShotPreviewCallback(this);
             }

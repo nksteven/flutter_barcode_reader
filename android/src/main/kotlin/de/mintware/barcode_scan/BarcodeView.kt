@@ -1,11 +1,10 @@
 package de.mintware.barcode_scan
 
 import android.content.Context
-import android.hardware.Camera
+import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.widget.LinearLayout
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.Result
 import io.flutter.plugin.common.BinaryMessenger
@@ -21,7 +20,9 @@ class BarcodeView : PlatformView , MyScannerView.ResultHandler , MethodChannel.M
     private lateinit var mContext: Context
     private lateinit var channelHandler: MethodChannel
     private val TAG="BarcodeView"
-    
+
+    var handler = Handler(Looper.getMainLooper())
+
     companion object {
         const val TOGGLE_FLASH = 200
         const val CANCEL = 300
@@ -30,6 +31,7 @@ class BarcodeView : PlatformView , MyScannerView.ResultHandler , MethodChannel.M
         const val EXTRA_ERROR_CODE = "error_code"
         var scanHeight: Int?=null
         var scanType: Int=1
+        var isScaning=false;
 
         private val formatMap: Map<Protos.BarcodeFormat, BarcodeFormat> = mapOf(
                 Protos.BarcodeFormat.aztec to BarcodeFormat.AZTEC,
@@ -68,7 +70,6 @@ class BarcodeView : PlatformView , MyScannerView.ResultHandler , MethodChannel.M
         handler.postDelayed(Runnable { startScanner() },1000)
         channelHandler=MethodChannel(message,"com.flutter_to_barcode_scanner_view_channel")
         channelHandler.setMethodCallHandler(this)
-//        startScanner();
     }
 
     private fun getDataByArgs(args: Map<String, Any>) {
@@ -110,6 +111,7 @@ class BarcodeView : PlatformView , MyScannerView.ResultHandler , MethodChannel.M
         } else {
             scannerView?.startCamera()
         }
+        isScaning=true;
     }
 
     private fun mapRestrictedBarcodeTypes(): List<BarcodeFormat> {
@@ -134,16 +136,29 @@ class BarcodeView : PlatformView , MyScannerView.ResultHandler , MethodChannel.M
         } else {
             response=result.text
         }
-        Log.d("response","response===$response");
+        Log.d(TAG,"response===$response");
         channelHandler.invokeMethod("didScanBarcodeAction",response);
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         if(call.method=="resumeCamera"){
-            scannerView?.resumeCameraPreview()
+            if(!isScaning){
+                handler.post(
+                        {scannerView?.resumeCameraPreview()}
+                )
+            }
             result.success(true)
         }else if(call.method=="pauseCamera"){
-            scannerView?.stopCameraPreview()
+            if(isScaning){
+                handler.post(
+                        {scannerView?.stopCameraPreview()}
+                )
+            }
+            result.success(true)
+        }else if(call.method=="stopCamera"){
+            handler.post(
+                    {scannerView?.stopCamera()}
+            )
             result.success(true)
         }else{
             result.notImplemented()

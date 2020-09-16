@@ -230,12 +230,14 @@ public abstract class MyBarcodeScannerView  extends BarcodeScannerView {
     }
 
     public void stopCameraPreview() {
+        BarcodeView.Companion.setScaning(false);
         if(mPreview != null) {
             mPreview.stopCameraPreview();
         }
     }
 
     protected void resumeCameraPreview() {
+        BarcodeView.Companion.setScaning(true);
         if(mPreview != null) {
             mPreview.showCameraPreview();
         }
