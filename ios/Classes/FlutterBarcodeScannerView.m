@@ -8,6 +8,11 @@
 #import "FlutterBarcodeScannerView.h"
 #import <MTBBarcodeScanner/MTBBarcodeScanner.h>
 
+typedef NS_ENUM(NSUInteger, ScanType) {
+    Barcode = 1,
+    Qrcode
+};
+
 CGFloat toTop = 8;
 CGFloat toLeft = 30;
 NSInteger lineImageViewTag = 2011;
@@ -52,11 +57,9 @@ CGFloat lineImageViewHeight = 2;
 
         NSMutableArray<NSString *> *metaDataObjectTypes = [NSMutableArray arrayWithArray:[self defaultMetaDataObjectTypes]];
         if (_scanType != nil && ![_scanType isKindOfClass:[NSNull class]]) {
-            if ([_scanType isEqualToString:@"1"]) {
-                //条形码
+            if ([_scanType intValue] == Barcode) {
                 [metaDataObjectTypes removeObjectAtIndex:0];
             } else {
-                //二维码
                 metaDataObjectTypes = [NSMutableArray arrayWithObject:metaDataObjectTypes.firstObject];
             }
         }
