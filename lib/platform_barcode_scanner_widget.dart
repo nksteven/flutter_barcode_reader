@@ -9,7 +9,7 @@ class PlatformBarcodeScannerWidget extends StatelessWidget {
   final ScanParam param;
 
   // ignore: public_member_api_docs
-  PlatformBarcodeScannerWidget({Key key, this.param}) : super(key: key);
+  PlatformBarcodeScannerWidget({Key? key, required this.param}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

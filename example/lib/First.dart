@@ -31,6 +31,7 @@ class _FirstPageState extends State<FirstPage> {
         str = methodChannel.arguments;
         setState(() {});
       }
+      return Future(() => null);
     });
   }
 

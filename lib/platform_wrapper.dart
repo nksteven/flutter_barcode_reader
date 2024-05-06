@@ -43,14 +43,14 @@ class BarcodeScanner {
     var events = _eventChannel.receiveBroadcastStream();
     var completer = Completer<ScanResult>();
 
-    StreamSubscription subscription;
+    StreamSubscription? subscription;
     subscription = events.listen((event) async {
       if (event is String) {
         if (event == cameraAccessGranted) {
-          subscription.cancel();
+          subscription?.cancel();
           completer.complete(await _doScan(options));
         } else if (event == cameraAccessDenied) {
-          subscription.cancel();
+          subscription?.cancel();
           completer.completeError(PlatformException(code: event));
         }
       }
@@ -90,12 +90,12 @@ class BarcodeScanner {
 
   /// Returns the number of cameras which are available
   /// Use n-1 as the index of the camera which should be used.
-  static Future<int> get numberOfCameras {
+  static Future<int?> get numberOfCameras {
     return _channel.invokeMethod('numberOfCameras');
   }
 
   // ignore: public_member_api_docs
-  static void stopScanning() {
+  static Future<void> stopScanning() async {
     scannerViewChannel.invokeMethod('stopScanning');
   }
 
