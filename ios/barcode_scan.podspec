@@ -15,7 +15,7 @@ A new flutter plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'MTBBarcodeScanner'
+  s.dependency 'nksteven/MTBBarcodeScanner', :git => 'https://github.com/nksteven/MTBBarcodeScanner.git', :branch => 'develop'
   s.dependency 'SwiftProtobuf'
   s.platform = :ios, '8.0'
 
