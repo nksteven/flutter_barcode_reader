@@ -56,7 +56,7 @@ class ChannelHandler(private val activityHelper: ActivityHelper
         result.success(activityHelper.requestCameraAccessIfNecessary(sink))
     }
 
-    fun startListening(messenger: BinaryMessenger?) {
+    fun startListening(messenger: BinaryMessenger) {
         if (methodChannel != null) {
             stopListening()
         }
@@ -64,7 +64,7 @@ class ChannelHandler(private val activityHelper: ActivityHelper
         methodChannel = MethodChannel(messenger, "de.mintware.barcode_scan").apply {
             setMethodCallHandler(this@ChannelHandler)
         }
-        
+
         if (eventChannel != null) {
             stopListening()
         }

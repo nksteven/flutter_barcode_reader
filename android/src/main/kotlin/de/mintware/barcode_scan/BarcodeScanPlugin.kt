@@ -1,35 +1,25 @@
 package de.mintware.barcode_scan
 
+import androidx.annotation.NonNull
 import androidx.annotation.Nullable
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
-import io.flutter.plugin.common.PluginRegistry
-
+import io.flutter.plugin.common.PluginRegistry.Registrar
 
 /** BarcodeScanPlugin */
-class BarcodeScanPlugin : FlutterPlugin ,ActivityAware{
+class BarcodeScanPlugin : FlutterPlugin, ActivityAware {
 
     @Nullable
     private var channelHandler: ChannelHandler? = null
     @Nullable
-
     private var activityHelper: ActivityHelper? = null
 
-    override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         activityHelper = ActivityHelper(flutterPluginBinding.applicationContext)
+
         channelHandler = ChannelHandler(activityHelper!!)
         channelHandler!!.startListening(flutterPluginBinding.binaryMessenger)
-        flutterPluginBinding.platformViewRegistry.registerViewFactory("barcode_android_view",BarcodeViewFactory(flutterPluginBinding.binaryMessenger))
-    }
-
-    override fun onDetachedFromEngine(p0: FlutterPlugin.FlutterPluginBinding) {
-        if (channelHandler == null) {
-            return
-        }
-        channelHandler!!.stopListening()
-        channelHandler = null
-        activityHelper = null
     }
 
     // This static function is optional and equivalent to onAttachedToEngine. It supports the old
@@ -42,12 +32,34 @@ class BarcodeScanPlugin : FlutterPlugin ,ActivityAware{
     // depending on the user's project. onAttachedToEngine or registerWith must both be defined
     // in the same class.
     companion object {
+        @Suppress("unused")
         @JvmStatic
-        fun registerWith(registrar: PluginRegistry.Registrar) {
-            registrar.platformViewRegistry().registerViewFactory("barcode_android_view",BarcodeViewFactory(registrar.messenger()))
+        fun registerWith(registrar: Registrar) {
+            val handler = ChannelHandler(ActivityHelper(
+                    registrar.context(),
+                    registrar.activity()
+            ))
+            handler.startListening(registrar.messenger())
         }
     }
 
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        if (channelHandler == null) {
+            return
+        }
+
+        channelHandler!!.stopListening()
+        channelHandler = null
+        activityHelper = null
+    }
+
+    override fun onDetachedFromActivity() {
+        if (channelHandler == null) {
+            return
+        }
+
+        activityHelper!!.activity = null
+    }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
         onAttachedToActivity(binding)
@@ -65,13 +77,4 @@ class BarcodeScanPlugin : FlutterPlugin ,ActivityAware{
     override fun onDetachedFromActivityForConfigChanges() {
         onDetachedFromActivity()
     }
-
-    override fun onDetachedFromActivity() {
-        if (channelHandler == null) {
-            return
-        }
-        activityHelper!!.activity = null
-    }
-
-   
 }
