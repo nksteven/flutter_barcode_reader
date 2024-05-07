@@ -13,6 +13,9 @@ class BarcodeViewFactory(var messenger: BinaryMessenger): PlatformViewFactory(St
         var params=args?.let {
             args as  Map<String,Any>
         }
+        if(params==null){
+            params= emptyMap()
+        }
         return  BarcodeView(context,messenger,params)
     }
 }
