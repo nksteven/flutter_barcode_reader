@@ -17,9 +17,9 @@ class BarcodeScanPlugin : FlutterPlugin, ActivityAware {
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         activityHelper = ActivityHelper(flutterPluginBinding.applicationContext)
-
         channelHandler = ChannelHandler(activityHelper!!)
         channelHandler!!.startListening(flutterPluginBinding.binaryMessenger)
+        flutterPluginBinding.platformViewRegistry.registerViewFactory("barcode_android_view",BarcodeViewFactory(flutterPluginBinding.binaryMessenger))
     }
 
     // This static function is optional and equivalent to onAttachedToEngine. It supports the old
