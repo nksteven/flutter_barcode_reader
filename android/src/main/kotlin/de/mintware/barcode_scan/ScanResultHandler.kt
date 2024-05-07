@@ -13,22 +13,22 @@ class ScanResultHandler(private val result: MethodChannel.Result) : ActivityResu
         when (resultCode) {
             Activity.RESULT_OK -> {
                 scanResult = data?.getByteArrayExtra(BarcodeScannerActivity.EXTRA_RESULT)
-                        ?: scanResult
+                    ?: scanResult
             }
             Activity.RESULT_CANCELED -> {
                 scanResult = Protos.ScanResult.newBuilder()
-                        .setType(Protos.ResultType.Cancelled)
-                        .build()
-                        .toByteArray()
+                    .setType(Protos.ResultType.Cancelled)
+                    .build()
+                    .toByteArray()
             }
             else -> {
                 val errorCode = data?.getStringExtra(BarcodeScannerActivity.EXTRA_ERROR_CODE)
                 scanResult = Protos.ScanResult.newBuilder()
-                        .setType(Protos.ResultType.Error)
-                        .setFormat(Protos.BarcodeFormat.unknown)
-                        .setRawContent(errorCode)
-                        .build()
-                        .toByteArray()
+                    .setType(Protos.ResultType.Error)
+                    .setFormat(Protos.BarcodeFormat.unknown)
+                    .setRawContent(errorCode)
+                    .build()
+                    .toByteArray()
             }
         }
         result.success(scanResult)

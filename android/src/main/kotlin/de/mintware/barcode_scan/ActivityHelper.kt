@@ -45,8 +45,8 @@ class ActivityHelper(private var applicationContext: Context?,
         }
 
         return activityResultMap
-                .getValue(requestCode)
-                .onActivityResult(requestCode, resultCode, data)
+            .getValue(requestCode)
+            .onActivityResult(requestCode, resultCode, data)
     }
 
     fun requestCameraAccessIfNecessary(sink: EventChannel.EventSink?
@@ -60,7 +60,7 @@ class ActivityHelper(private var applicationContext: Context?,
 
         val array = arrayOf(Manifest.permission.CAMERA)
         if (ContextCompat.checkSelfPermission(activity!!, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED) {
+            == PackageManager.PERMISSION_GRANTED) {
             return false
         }
 
@@ -69,15 +69,15 @@ class ActivityHelper(private var applicationContext: Context?,
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<out String>?,
-                                            grantResults: IntArray?
+                                            permissions: Array<out String>,
+                                            grantResults: IntArray
     ): Boolean {
         if (!permissionResultMap.containsKey(requestCode)) {
             return false
         }
 
         return permissionResultMap
-                .getValue(requestCode)
-                .onRequestPermissionsResult(requestCode, permissions, grantResults)
+            .getValue(requestCode)
+            .onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }
