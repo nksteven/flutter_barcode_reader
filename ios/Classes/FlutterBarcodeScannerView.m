@@ -6,7 +6,7 @@
 //
 
 #import "FlutterBarcodeScannerView.h"
-#import "../MTBBarcodeScanner/Classes/ios/Scanners/MTBBarcodeScanner.h"
+#import "MTBBarcodeScannerClasses/ios/Scanners/MTBBarcodeScanner.h"
 
 typedef NS_ENUM(NSUInteger, ScanType) {
     Barcode = 1,
