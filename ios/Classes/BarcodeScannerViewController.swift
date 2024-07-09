@@ -6,7 +6,9 @@
 //
 
 import Foundation
+import "../MTBBarcodeScanner/Classes/ios/Scanners/MTBBarcodeScanner.h"
 import MTBBarcodeScanner
+//import MTBBarcodeScanner
 
 class BarcodeScannerViewController: UIViewController {
   private var previewView: UIView?
