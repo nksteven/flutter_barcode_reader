@@ -26,9 +26,11 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import me.dm7.barcodescanner.core.CameraWrapper;
 import me.dm7.barcodescanner.core.DisplayUtils;
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class MyScannerView extends MyBarcodeScannerView {
+public class MyScannerView extends ZXingScannerView {
     private static final String TAG = "MyScannerView";
 
     public interface ResultHandler {
@@ -101,6 +103,21 @@ public class MyScannerView extends MyBarcodeScannerView {
         mMultiFormatReader = new MultiFormatReader();
         mMultiFormatReader.setHints(hints);
     }
+
+
+//    public void stopCameraPreview() {
+//        BarcodeView.Companion.setScaning(false);
+//        if(mPreview != null) {
+//            mPreview.stopCameraPreview();
+//        }
+//    }
+//
+//    protected void resumeCameraPreview() {
+//        BarcodeView.Companion.setScaning(true);
+//        if(mPreview != null) {
+//            mPreview.showCameraPreview();
+//        }
+//    }
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {

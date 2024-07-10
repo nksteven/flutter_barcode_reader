@@ -2,6 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 // ignore: public_member_api_docs
 class PlatformBarcodeScannerWidget extends StatelessWidget {
@@ -20,6 +24,30 @@ class PlatformBarcodeScannerWidget extends StatelessWidget {
         creationParams: param.toMap(),
       );
     } else {
+      return PlatformViewLink(
+        viewType: "barcode_android_view",
+        surfaceFactory: (BuildContext context,
+            PlatformViewController controller) {
+          return PlatformViewSurface(
+            controller: controller,
+            hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+          );
+        },
+        onCreatePlatformView:
+            (PlatformViewCreationParams params) {
+          return PlatformViewsService.initExpensiveAndroidView(
+            id: params.id,
+            viewType: "barcode_android_view",
+            layoutDirection: TextDirection.ltr,
+            creationParams: param.toMap(),
+            creationParamsCodec: const StandardMessageCodec(),
+          )
+            ..addOnPlatformViewCreatedListener(
+                params.onPlatformViewCreated)
+            ..create();
+        },
+      );
       return AndroidView(
           viewType: "barcode_android_view",
           creationParamsCodec: const StandardMessageCodec(),

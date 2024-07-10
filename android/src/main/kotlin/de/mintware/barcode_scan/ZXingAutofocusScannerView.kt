@@ -5,6 +5,8 @@ import android.hardware.Camera
 import android.util.Log
 import me.dm7.barcodescanner.core.CameraWrapper
 import me.dm7.barcodescanner.zxing.ZXingScannerView
+import com.google.zxing.PlanarYUVLuminanceSource
+import de.mintware.barcode_scan.BarcodeView.Companion.scanHeight
 
 class ZXingAutofocusScannerView(context: Context) : ZXingScannerView(context) {
 
@@ -30,4 +32,25 @@ class ZXingAutofocusScannerView(context: Context) : ZXingScannerView(context) {
             super.setAutoFocus(callbackFocus)
         }
     }
+
+    override fun buildLuminanceSource(
+        data: ByteArray?,
+        width: Int,
+        height: Int
+    ): PlanarYUVLuminanceSource? {
+        val rect = getFramingRectInPreview(width, height) ?: return null
+        // Go ahead and assume it's YUV rather than die.
+        var source: PlanarYUVLuminanceSource? = null
+        try {
+//            source = new PlanarYUVLuminanceSource(data, width, height, 0, 0,
+//                    rect.width(), rect.height(), false);
+            source = PlanarYUVLuminanceSource(
+                data, width, height, 0, 0,
+                width, scanHeight!!, false
+            )
+        } catch (e: java.lang.Exception) {
+        }
+        return source
+    }
+
 }
