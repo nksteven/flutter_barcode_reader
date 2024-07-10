@@ -35,7 +35,6 @@ class BarcodeScanner {
   static Future<ScanResult> scan({
     ScanOptions options = const ScanOptions(),
   }) async {
-    assert(options != null);
     if (Platform.isIOS) {
       return _doScan(options);
     }
@@ -78,7 +77,7 @@ class BarcodeScanner {
                 ..aspectTolerance = options.android.aspectTolerance
               /**/)
         /**/;
-    var buffer = await _channel.invokeMethod('scan', config?.writeToBuffer());
+    var buffer = await _channel.invokeMethod('scan', config.writeToBuffer());
     var tmpResult = proto.ScanResult.fromBuffer(buffer);
     return ScanResult(
       format: tmpResult.format,
